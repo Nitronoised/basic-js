@@ -1,29 +1,41 @@
-
-module.exports = function transform(array) {
-  if (typeof array !== 'object' || array === null || array == { 'foo': 'bar' }) { throw new Error }
-  else {
-    for (let i = 0; i < array.length; i++) {
-      if (array[i] == '--discard-next') {
-        if (typeof array[i + 1] !== 'undefined' && array[i + 1] !== '--discard-next' && array[i + 1] !== '--discard-prev' && array[i + 1] !== '--double-prev' && array[i + 1] !== '--double-next') {
-          array.splice(i + 1, 1)
+module.exports = function transform(arr) {
+  if (!Array.isArray(arr)) {throw new Error('argument is nor array')}
+  let newArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    switch (arr[i]) {
+      case ('--discard-prev'):
+        if (i === 0) {
+          break;
         }
-      }
-      if (array[i] == '--discard-prev') {
-        if (typeof array[i - 1] !== 'undefined' && array[i - 1] !== '--double-prev' && array[i - 1] !== '--discard-next' && array[i - 1] !== '--double-prev' && array[i - 1] !== '--double-next') {
-          array.splice(i - 1, 1)
+        if (arr[i - 2] !== '--discard-next') {
+          newArr.pop();
         }
-      }
-      if (array[i] == '--double-next') {
-        if (typeof array[i + 1] !== 'undefined' && array[i + 1] !== '--double-next' && array[i + 1] !== '--discard-next' && array[i + 1] !== '--double-prev' && array[i + 1] !== '--discard-prev') {
-          array.splice(i, 1, array[i], array[i + 1])
+        break;
+      case ('--discard-next'):
+        if (i === arr.length - 1) {
+          break;
+        } else {
+          i++;
         }
-      }
-      if (array[i] == '--double-prev') {
-        if (typeof array[i - 1] !== 'undefined' && array[i - 1] !== '--double-prev' && array[i - 1] !== '--discard-next' && array[i - 1] !== '--double-prev' && array[i - 1] !== '--discard-prev') {
-          array.splice(i, 1, array[i], array[i - 1])
+        break;
+      case ('--double-prev'):
+        if (i === 0) {
+          break;
         }
-      }
+        if (arr[i - 2] !== '--discard-next') {
+          newArr.push(arr[i - 1]);
+        }
+        break;
+      case ('--double-next'):
+        if (i === arr.length - 1) {
+          break;
+        } else {
+          newArr.push(arr[i + 1]);
+        }
+        break;
+      default:
+        newArr.push(arr[i]);
     }
-    return array.filter(e => e !== '--discard-next' && e !== '--double-prev' && e !== '--discard-prev' && e !== '--double-next')
   }
+  return newArr;
 };
