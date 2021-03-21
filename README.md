@@ -1,6 +1,5 @@
 # BasicJS
 
-⚠️ DO NOT SUBMIT PULL REQUESTS TO THIS REPO ⚠️
 
 ## General task description
 Your task is to write several functions that are the solution to the subtasks. Subtasks descriptions, as well as instructions on how to run tests and submit solutions are below.
